@@ -2,6 +2,8 @@
 
 Organize key-value pair information and links in categories in a local HTML you can load in your browser.
 
+![memo screenshot](img/screenshot.png)
+
 ## Usage
 
 1. Make a copy the file `content.json.example` and name it `content.json`.
