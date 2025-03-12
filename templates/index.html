@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarks</title>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        body {
+            font-family: "Lucida Console", Courier, monospace;
+            color: #1f1f1f;
+            display: flex;
+            flex-direction: column;
+        }
+        h1, h2 {
+            margin: 0;
+        }
+        .top {
+            display: flex;
+            align-items: baseline;
+        }
+        .top h1 {
+            padding: 20px 0;
+            padding-left: 30px;
+            width: 170px;
+            background-color: #e5e5e5;
+            border-right: 4px solid #fca311;
+        }
+        .top h2 {
+            padding-left: 30px;
+        }
+        .content {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+        }
+        .menu {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+            background-color: #e5e5e5;
+            border-right: 4px solid #fca311;
+        }
+        .menu .item {
+            padding: 10px;
+            padding-left: 30px;
+            border-bottom: 1px solid #ffffff;
+            text-decoration: none;
+            color: black;
+        }
+        .menu .item:hover {
+            color: white;
+            background-color: #fca311;
+        }
+        .menu .item a {
+            flex-wrap: wrap;
+        }
+        .menu .item a:hover {
+            color: white;
+        }
+        .selected {
+            color: white !important;
+            background-color: #fca311;
+        }
+        .info {
+            margin-left: 30px;
+        }
+        .info a {
+            color: #14213d;
+        }
+        .info a:hover {
+            text-decoration: none;
+        }
+        .info-list {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-list-item {
+            margin: 10px 0;
+            display: grid;
+            grid-template-columns: 150px 400px min-content;
+            column-gap: 30px;
+        }
+        .info-list-item span {
+            justify-items: start;
+        }
+        .info-list-item button {
+            align-self: start;
+        }
+        .info-intro {
+            margin: 10px 0;
+        }
+        .hidden_textarea {
+            position: absolute;
+            left: -100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <h1>@memo</h1>
+        <h2 id="section-title">Welcome</h2>
+    </div>
+    <div class="content">
+        <div class="menu">
+            {{ range $section := .Sections }}
+            <a href="#" class="item" onclick="openSection('{{ $section.Name }}')">{{ $section.Name }}</a>
+            {{ end }}
+        </div>
+        <div class="info">
+            <div id="welcome" class="info-list">
+                <div class="info-intro">
+                    <span>Browser your categories!</span>
+                </div>
+            </div>
+
+            {{ range $section := .Sections }} 
+            <div id="{{ .Name }}" class="info-list" style="display: none;">
+                {{ range $i, $item := .Items }}
+                <div class="info-list-item">
+                    {{ if eq $item.Type "text" }}
+                    <span>{{ $item.Description }}</span>
+                    <span id="{{ $section.Name }}-{{ $i }}">{{ $item.Value }}</span>
+                    <button onclick='clipboard("{{ $section.Name }}-{{ $i }}")'>Copy</button>
+                    {{ else if eq $item.Type "link" }}
+                    <a target="_blank" href="{{ $item.Value }}">{{ $item.Description }}</a>
+                    {{ end }}
+                </div>
+                {{ end }}
+            </div> 
+            {{ end }}
+        </div>
+    </div>
+    <script>
+        let currentSection = 'welcome';
+
+        function openSection(name) {
+            document.getElementById('section-title').textContent = name;
+            document.getElementById(currentSection).style.display = 'none';
+            document.getElementById(name).style.display = 'block';
+
+            currentSection = name;
+
+            const elements = document.querySelectorAll(".selected");
+            elements.forEach(element => {
+                element.classList.remove('selected');
+            });
+
+            event.target.classList.add('selected');
+        }
+
+        function clipboard(el){
+            const copyText = document.getElementById(el).textContent;
+            const textArea = document.createElement('textarea');
+            textArea.textContent = copyText;
+            document.body.append(textArea);
+            textArea.className = "hidden_textarea";
+            textArea.select();
+            document.execCommand("copy");
+            textArea.remove();
+        }
+    </script>
+</body>
+</html>
+
+
+

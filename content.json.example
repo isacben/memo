@@ -1,0 +1,19 @@
+{
+    "sections": [
+        {
+            "name": "Section 1",
+            "items": [
+                {
+                    "type": "text",
+                    "description": "Some ID",
+                    "value": "12345-12345"
+                },
+                {
+                    "type": "link",
+                    "description": "Some URL",
+                    "value": "https://google.com"
+                }
+            ]
+        }
+    ]
+}
